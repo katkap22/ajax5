@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        button {
+            margin: 20px 0;
+            display: block;
+        }
+        input {
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>    
+    <title>Final task</title>
+</head>
+<body>
+    <form action="">
+        <label for="input1">Номер страницы</label>
+        <input id="input1" type="text" placeholder="Введите любое число">
+        <label for="input2">Лимит</label>
+        <input id="input2" type="text" placeholder="Введите любое число">
+        <button class='button'>Запрос</button>
+    </form>
+    <div class="result"></div>
+
+    <script>
+        function imageLoaded(){
+            const btn = document.querySelector('.button');
+            const resultDiv = document.querySelector('.result');
+            const input1 = document.querySelector('#input1');
+            const input2 = document.querySelector('#input2'); 
+
+            function useFetch(){ 
+                debugger;
+                if (validateInput(input1.value, input2.value) === true){
+                    fetch(`https://picsum.photos/v2/list?page=${input1.value}&limit=${input2.value}`) 
+                        // .then((response) => {
+                            // return response.json();   
+                        // })
+                        .then((data) => {
+                            displayResult(data);
+                        }) 
+                        .catch(() => {
+                            writeOutput(`Ошибка! Неверный URL`);
+                        })
+                        .finally(() => {
+                            console.log('Выполняется всегда');
+                        })
+                        debugger;
+                } else 
+                if (validateInput(input1.value, input2.value) === 'Ввод в инпут1 неверный') {
+                    writeOutput('Номер страницы вне диапазона от 1 до 10');
+                }  else 
+                if (validateInput(input1.value, input2.value) === 'Ввод в инпут1 неверный') {
+                    writeOutput('Лимит вне диапазона от 1 до 10'); 
+                }
+            }
+        
+            function validateInput(value1, value2) {
+                let validated = true;
+                let start = 1;
+                let end = 10;
+
+                if (value1 === '' || !isFinite(value1) || value1 < start || value1 > end) {
+                    validated = 'Ввод в инпут1 неверный';
+                } else if (value2 === '' || !isFinite(value2) || value2 < start || value2 > end) {
+                    validated = 'Ввод в инпут2 неверный';
+                }
+
+                return validated;
+            }
+
+            function writeOutput(message) {
+                resultDiv.textContent = message;
+            }
+
+            function displayResult(responseData) {
+                debugger;
+                console.log(responseData);
+                const card = `
+                    <div>
+                        <img src="${responseData.url}">
+                    </div>
+                `; 
+                debugger;
+                resultDiv.innerHTML = card;
+                debugger;
+            }
+
+            btn.addEventListener('click', useFetch);
+        }
+
+        document.addEventListener("DOMContentLoaded", imageLoaded);
+    </script>
+</body>
+</html>
